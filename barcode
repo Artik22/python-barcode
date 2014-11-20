@@ -1,0 +1,30 @@
+#!/usr/bin/env python
+
+import logging
+
+def main(ofs):
+  logging.info('a log message')
+  ofs.write('%s\n' % 'an output message')
+  logging.error('OH SHIT ERROR')
+
+if __name__ == '__main__':
+  import sys
+  import argparse
+
+  parser = argparse.ArgumentParser(description='Barcode Checker')
+  
+  parser.add_argument('-d', '--debug', dest='loglevel', action='store_const',
+                      const=logging.DEBUG, default=logging.INFO,
+                      help='Set logging level to DEBUG.')
+
+  parser.add_argument('-o', '--out', type=lambda x: open(x,'w'),
+                      default=sys.stdout, help='Output file.')
+  
+  args = parser.parse_args()
+
+  logging.basicConfig(
+    level = args.loglevel,
+    format = '%(asctime)s %(name)-6s %(levelname)-4s %(message)s',
+  )
+
+  main(args.out)
